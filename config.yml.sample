@@ -1,0 +1,6 @@
+---
+:user                   : Wael Nasreddine
+:email                  : wael.nasreddine@gmail.com
+:recap_to               : [ wael.nasreddine@gmail.com, wael@nasreddine.com ]
+
+:dbadapter              : sqlite
