@@ -21,5 +21,22 @@
 #
 ###
 
+require 'rubygems'
+require 'sequel'
+
 module Todo
+  class Database
+	attr_reader :db
+
+	def initialize(config)
+	  raise ArgumentError unless config.is_a?(Hash)
+
+	  adapter = Sequel::Database::ADAPTERS.detect {|db| db.to_s.eql? config[:adapter]}
+
+	  # TODO: Add proper exception
+	  raise ArgumentError if adapter.nil? || adapter.empty?
+
+	  @db = Sequel.connect(:adapter => adapter, :database => config[:database])
+	end
+  end
 end
