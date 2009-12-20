@@ -70,3 +70,6 @@ end
 
 # Read command line options
 opts.parse!
+
+# Parse the configuration
+config = Todo.configuration()
