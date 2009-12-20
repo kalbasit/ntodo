@@ -40,14 +40,13 @@ require 'todo/recap'
 require 'todo/task'
 
 module Todo
+  CONFIG_FILE = File.join(ENV['HOME'], *%w[.config todo config.yml])
 
   def self.configuration
-	config_file = File.join(ENV['HOME'], *%w[.config todo config.yml])
-
 	begin
-	  config = YAML.load_file(config_file)
-	  raise "Invalid configuration - #{config_file}" unless config.is_a?(Hash)
-	  STDOUT.puts "Configuration loaded from #{config_file}"
+	  config = YAML.load_file(CONFIG_FILE)
+	  raise "Invalid configuration - #{CONFIG_FILE}" unless config.is_a?(Hash)
+	  STDOUT.puts "Configuration loaded from #{CONFIG_FILE}"
 	rescue => err
 	  STDERR.puts "Configuration cannot be read from the config file, perhaps I couldn't parse it."
 	  STDERR.puts "\t" + err.to_s
