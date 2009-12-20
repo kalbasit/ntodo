@@ -1,0 +1,72 @@
+#!/usr/bin/env ruby
+
+###
+#
+# This file is part of todo
+# 
+# Copyright (c) 2009 Wael Nasreddine <wael.nasreddine@gmail.com>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, 
+# USA.
+#
+###
+
+# Put the library folder in the load path
+$:.unshift File.join(File.dirname(__FILE__), *%w[.. lib])
+
+# Require the optparse to parse options given to the command line
+require 'optparse'
+
+# Require todo which bootstraps the todo
+require 'todo'
+
+# Set the help topic
+help = <<HELP
+todo is a powerfull ncurses based-todo, you can add tasks, start working on them, pause it, stop it and send
+the recap mail to the defined users in the configuration files
+
+Basic command line Usage:
+  todo
+  todo --add bug 'todo rocks, get it'
+  todo --start BUG_100
+  todo --pause BUG_100
+  todo --stop BUG_100
+  todo --send-recap
+
+  Configuration is read from ~/.config/todo/config.yml
+
+HELP
+
+# Cycle throught the opts and set the options
+options = {}
+opts = OptionParser.new do |opts|
+  opts.banner = help
+
+  opts.on("--add <type> <message>", "Add a new task/bug with the message") do |type, msg|
+	begin
+	  raise ArgumentError if type.nil? || msg.nil?
+	rescue
+	  puts "You should specify the type and the message"
+	  exit 1
+	end
+  end
+
+  opts.on("--version", "Display current version") do
+	puts "Todo " + Todo.version
+  end
+end
+
+# Read command line options
+opts.parse!
