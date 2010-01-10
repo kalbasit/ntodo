@@ -22,5 +22,8 @@
 ###
 
 module Ntodo
-
+  class Task < Sequel::Model
+	many_to_one :project
+	one_to_many :logs
+  end
 end

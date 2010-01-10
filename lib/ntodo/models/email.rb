@@ -22,5 +22,7 @@
 ###
 
 module Ntodo
-
+  class Email < Sequel::Model
+	many_to_many :recaps
+  end
 end

@@ -22,5 +22,8 @@
 ###
 
 module Ntodo
-
+  class Recap < Sequel::Model
+	many_to_one :project
+	one_to_many :emails
+  end
 end
