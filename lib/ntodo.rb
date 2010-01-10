@@ -23,6 +23,7 @@
 
 $:.unshift File.dirname(__FILE__)     # For use/testing when no gem is installed
 
+
 # rubygems
 require 'rubygems'
 
@@ -44,5 +45,4 @@ require 'ntodo/ui'
 require 'ntodo/version'
 
 module Ntodo
-
 end

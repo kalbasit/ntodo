@@ -25,17 +25,29 @@ require 'rubygems'
 require 'sequel'
 
 module Ntodo
-  def self.db_connect()
-	# Get the configuration.
-	config = Ntodo.configuration()
 
-	raise ArgumentError unless config.is_a?(Hash)
+  class Database
+	@@db = nil
 
-	adapter = Sequel::Database::ADAPTERS.detect {|db| db.to_s.eql? config[:adapter]}
+	def initialize
+	  if @@db.nil?
+		# Get the configuration.
+		config = Ntodo::Configuration.configuration
 
-	# TODO: Add proper exception
-	raise ArgumentError if adapter.nil? || adapter.empty?
+		raise ArgumentError unless config.is_a?(Hash)
 
-	@db = Sequel.connect(:adapter => adapter, :database => config[:database])
+		adapter = Sequel::Database::ADAPTERS.detect {|db| db.to_s.eql? config[:adapter]}
+
+		# TODO: Add proper exception
+		raise ArgumentError if adapter.nil? || adapter.empty?
+
+		@@db = Sequel.connect(:adapter => adapter, :database => config[:database])
+	  end
+
+	  @@db
+	end
   end
 end
+
+# The models require one Sequel::Database instance
+Ntodo::Database.new
