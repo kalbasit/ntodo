@@ -76,5 +76,3 @@ config = Ntodo.configuration()
 
 # Create an instance of the database
 database = Ntodo::Database.new()
-
-print database.to_s

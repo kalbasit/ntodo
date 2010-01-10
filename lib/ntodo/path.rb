@@ -21,27 +21,19 @@
 #
 ###
 
-$:.unshift File.dirname(__FILE__)     # For use/testing when no gem is installed
-
-# rubygems
-require 'rubygems'
-
 # core
 require 'fileutils'
-require 'time'
-require 'yaml'
-
-# stdlib
-
-# internal requires
-require 'ntodo/config'
-require 'ntodo/db'
-require 'ntodo/path'
-require 'ntodo/recap'
-require 'ntodo/task'
-require 'ntodo/ui'
-require 'ntodo/version'
 
 module Ntodo
+  def self.root
+	File.expand_path(File.join(File.dirname(__FILE__), *%w[.. ..]))
+  end
 
+  def self.lib
+	File.expand_path(File.join(Ntodo.root, 'lib'))
+  end
+
+  def self.bin
+	File.expand_path(File.join(Ntodo.root, 'bin'))
+  end
 end

@@ -21,27 +21,13 @@
 #
 ###
 
-$:.unshift File.dirname(__FILE__)     # For use/testing when no gem is installed
-
-# rubygems
-require 'rubygems'
-
 # core
 require 'fileutils'
-require 'time'
 require 'yaml'
 
-# stdlib
-
-# internal requires
-require 'ntodo/config'
-require 'ntodo/db'
-require 'ntodo/path'
-require 'ntodo/recap'
-require 'ntodo/task'
-require 'ntodo/ui'
-require 'ntodo/version'
-
 module Ntodo
-
+  def self.version
+	yml = YAML.load(File.read(File.join(Ntodo.root, 'VERSION.yml')))
+	"#{yml[:major]}.#{yml[:minor]}.#{yml[:patch]}"
+  end
 end

@@ -21,27 +21,24 @@
 #
 ###
 
-$:.unshift File.dirname(__FILE__)     # For use/testing when no gem is installed
-
-# rubygems
-require 'rubygems'
-
 # core
 require 'fileutils'
-require 'time'
 require 'yaml'
 
-# stdlib
-
-# internal requires
-require 'ntodo/config'
-require 'ntodo/db'
-require 'ntodo/path'
-require 'ntodo/recap'
-require 'ntodo/task'
-require 'ntodo/ui'
-require 'ntodo/version'
-
 module Ntodo
+  CONFIG_FILE = File.join(ENV['HOME'], *%w[.config ntodo config.yml])
 
+  def self.configuration
+	begin
+	  config = YAML.load_file(CONFIG_FILE)
+	  raise "Invalid configuration - #{CONFIG_FILE}" unless config.is_a?(Hash)
+	  STDOUT.puts "Configuration loaded from #{CONFIG_FILE}"
+	rescue => err
+	  STDERR.puts "Configuration cannot be read from the config file, perhaps I couldn't parse it."
+	  STDERR.puts "\t" + err.to_s
+	  exit 1
+	end
+
+	config
+  end
 end
