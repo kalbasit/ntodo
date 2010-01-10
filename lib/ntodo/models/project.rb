@@ -26,5 +26,10 @@ module Ntodo
 	one_to_many :tasks
 	one_to_many :logs
 	one_to_many :recaps
+
+	def validate
+	  errors.add(:name, "can't be empty") if name.empty?
+	  errors.add(:written_on, "should be in the past") if written_on > Time.now
+	end
   end
 end

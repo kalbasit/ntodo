@@ -25,5 +25,11 @@ module Ntodo
   class Recap < Sequel::Model
 	many_to_one :project
 	one_to_many :emails
+
+	def validate
+	  errors.add(:project_id, "can't be empty") if project_id.empty?
+	  errors.add(:email_id, "can't be empty") if email_id.empty?
+	  errors.add(:written_on, "should be in the past") if written_on > Time.now
+	end
   end
 end

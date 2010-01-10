@@ -25,5 +25,12 @@ module Ntodo
   class Log < Sequel::Model
 	many_to_one :project
 	many_to_one :task
+
+	def validate
+	  errors.add(:project_id, "can't be empty") if project_id.empty?
+	  errors.add(:task_id, "can't be empty") if task_id.empty?
+	  errors.add(:type, "can't be empty") if type.empty?
+	  errors.add(:written_on, "should be in the past") if written_on > Time.now
+	end
   end
 end

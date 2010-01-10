@@ -24,5 +24,11 @@
 module Ntodo
   class Email < Sequel::Model
 	many_to_many :recaps
+
+	def validate
+	  errors.add(:name, "can't be empty") if name.empty?
+	  errors.add(:email, "can't be empty") if email.empty?
+	  errors.add(:written_on, "should be in the past") if written_on > Time.now
+	end
   end
 end
