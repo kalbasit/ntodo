@@ -21,21 +21,19 @@
 #
 ###
 
+$:.unshift File.dirname(__FILE__)     # For use/testing when no gem is installed
+
+# core
 require 'rubygems'
 require 'sequel'
 
+# models
+require 'models/project'
+require 'models/task'
+require 'models/recap'
+require 'models/log'
+require 'models/email'
+
 module Ntodo
-  def self.db_connect()
-	# Get the configuration.
-	config = Ntodo.configuration()
 
-	raise ArgumentError unless config.is_a?(Hash)
-
-	adapter = Sequel::Database::ADAPTERS.detect {|db| db.to_s.eql? config[:adapter]}
-
-	# TODO: Add proper exception
-	raise ArgumentError if adapter.nil? || adapter.empty?
-
-	@db = Sequel.connect(:adapter => adapter, :database => config[:database])
-  end
 end

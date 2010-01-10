@@ -75,4 +75,6 @@ opts.parse!
 config = Ntodo.configuration()
 
 # Create an instance of the database
-database = Ntodo::Database.new()
+database = Ntodo::db_connect()
+
+print database.to_s

@@ -36,6 +36,7 @@ require 'yaml'
 # internal requires
 require 'ntodo/config'
 require 'ntodo/db'
+require 'ntodo/models'
 require 'ntodo/path'
 require 'ntodo/recap'
 require 'ntodo/task'
