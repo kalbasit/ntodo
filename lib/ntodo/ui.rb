@@ -1,6 +1,6 @@
 ###
 #
-# This file is part of todo
+# This file is part of nTodo
 # 
 # Copyright (c) 2009 Wael Nasreddine <wael.nasreddine@gmail.com>
 #
@@ -21,5 +21,5 @@
 #
 ###
 
-module Todo
+module Ntodo
 end

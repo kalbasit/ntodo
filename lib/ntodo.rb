@@ -1,6 +1,6 @@
 ###
 #
-# This file is part of todo
+# This file is part of nTodo
 # 
 # Copyright (c) 2009 Wael Nasreddine <wael.nasreddine@gmail.com>
 #
@@ -34,13 +34,13 @@ require 'yaml'
 # stdlib
 
 # internal requires
-require 'todo/ui'
-require 'todo/db'
-require 'todo/recap'
-require 'todo/task'
+require 'ntodo/ui'
+require 'ntodo/db'
+require 'ntodo/recap'
+require 'ntodo/task'
 
-module Todo
-  CONFIG_FILE = File.join(ENV['HOME'], *%w[.config todo config.yml])
+module Ntodo
+  CONFIG_FILE = File.join(ENV['HOME'], *%w[.config ntodo config.yml])
 
   def self.configuration
 	begin

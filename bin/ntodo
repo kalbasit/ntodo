@@ -2,7 +2,7 @@
 
 ###
 #
-# This file is part of todo
+# This file is part of nTodo
 # 
 # Copyright (c) 2009 Wael Nasreddine <wael.nasreddine@gmail.com>
 #
@@ -30,22 +30,22 @@ $:.unshift File.join(File.dirname(__FILE__), *%w[.. lib])
 require 'optparse'
 
 # Require todo which bootstraps the todo
-require 'todo'
+require 'ntodo'
 
 # Set the help topic
 help = <<HELP
-todo is a powerfull ncurses based-todo, you can add tasks, start working on them, pause it, stop it and send
+ntodo is a powerfull ncurses-based todo, you can add tasks, start working on them, pause it, stop it and send
 the recap mail to the defined users in the configuration files
 
 Basic command line Usage:
-  todo
-  todo --add bug 'todo rocks, get it'
-  todo --start BUG_100
-  todo --pause BUG_100
-  todo --stop BUG_100
-  todo --send-recap
+  ntodo
+  ntodo --add bug 'todo rocks, get it'
+  ntodo --start BUG_100
+  ntodo --pause BUG_100
+  ntodo --stop BUG_100
+  ntodo --send-recap
 
-  Configuration is read from ~/.config/todo/config.yml
+  Configuration is read from ~/.config/ntodo/config.yml
 
 HELP
 
@@ -64,7 +64,7 @@ opts = OptionParser.new do |opts|
   end
 
   opts.on("--version", "Display current version") do
-	puts "Todo " + Todo.version
+	puts "nTodo " + Ntodo.version
   end
 end
 
@@ -72,4 +72,9 @@ end
 opts.parse!
 
 # Parse the configuration
-config = Todo.configuration()
+config = Ntodo.configuration()
+
+# Create an instance of the database
+database = Ntodo::Database.new()
+
+print database.to_s

@@ -1,6 +1,6 @@
 ###
 #
-# This file is part of todo
+# This file is part of nTodo
 # 
 # Copyright (c) 2009 Wael Nasreddine <wael.nasreddine@gmail.com>
 #
@@ -24,11 +24,14 @@
 require 'rubygems'
 require 'sequel'
 
-module Todo
+module Ntodo
   class Database
 	attr_reader :db
 
-	def initialize(config)
+	def initialize()
+	  # Get the configuration.
+	  config = Ntodo.configuration()
+
 	  raise ArgumentError unless config.is_a?(Hash)
 
 	  adapter = Sequel::Database::ADAPTERS.detect {|db| db.to_s.eql? config[:adapter]}
