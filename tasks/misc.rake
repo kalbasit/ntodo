@@ -21,36 +21,7 @@
 #
 ###
 
-require 'rubygems'
-require 'sequel'
-
-module Ntodo
-
-  class Database
-	@@db = nil
-
-	def initialize
-	  if @@db.nil?
-		# Get the configuration.
-		config = Ntodo::Configuration.configuration
-
-		raise ArgumentError unless config.is_a?(Hash)
-
-		adapter = Sequel::Database::ADAPTERS.detect {|db| db.to_s.eql? config[:adapter]}
-
-		# TODO: Add proper exception
-		raise ArgumentError if adapter.nil? || adapter.empty?
-
-		@@db = Sequel.connect(:adapter => adapter, :database => config[:database])
-	  end
-	end
-
-	def db
-	  @@db
-	end
-  end
+task :environment do
+  NTODO_ROOT = File.expand_path(File.join(File.dirname(__FILE__), '..'))
+  require(File.join(NTODO_ROOT, *%w[lib ntodo.rb]))
 end
-
-# Initialize the DB constant that will be used by the models and the migration files
-database = Ntodo::Database.new
-DB = database.db

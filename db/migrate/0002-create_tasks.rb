@@ -21,36 +21,18 @@
 #
 ###
 
-require 'rubygems'
-require 'sequel'
-
-module Ntodo
-
-  class Database
-	@@db = nil
-
-	def initialize
-	  if @@db.nil?
-		# Get the configuration.
-		config = Ntodo::Configuration.configuration
-
-		raise ArgumentError unless config.is_a?(Hash)
-
-		adapter = Sequel::Database::ADAPTERS.detect {|db| db.to_s.eql? config[:adapter]}
-
-		# TODO: Add proper exception
-		raise ArgumentError if adapter.nil? || adapter.empty?
-
-		@@db = Sequel.connect(:adapter => adapter, :database => config[:database])
-	  end
-	end
-
-	def db
-	  @@db
+class CreateTasks < Sequel::Migration
+  def up
+	create_table :tasks do
+	  primary_key :id
+	  column :project_id, :integer, :index
+	  text :title
+	  text :description
+	  datetime :written_on
 	end
   end
-end
 
-# Initialize the DB constant that will be used by the models and the migration files
-database = Ntodo::Database.new
-DB = database.db
+  def down
+	drop_table :tasks
+  end
+end

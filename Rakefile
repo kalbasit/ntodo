@@ -21,36 +21,11 @@
 #
 ###
 
-require 'rubygems'
-require 'sequel'
+# Add your own tasks in files placed in lib/tasks ending in .rake,
+# for example lib/tasks/capistrano.rake, and they will automatically be available to Rake.
 
-module Ntodo
+require 'rake'
+#require 'rake/testtask'
+#require 'rake/rdoctask'
 
-  class Database
-	@@db = nil
-
-	def initialize
-	  if @@db.nil?
-		# Get the configuration.
-		config = Ntodo::Configuration.configuration
-
-		raise ArgumentError unless config.is_a?(Hash)
-
-		adapter = Sequel::Database::ADAPTERS.detect {|db| db.to_s.eql? config[:adapter]}
-
-		# TODO: Add proper exception
-		raise ArgumentError if adapter.nil? || adapter.empty?
-
-		@@db = Sequel.connect(:adapter => adapter, :database => config[:database])
-	  end
-	end
-
-	def db
-	  @@db
-	end
-  end
-end
-
-# Initialize the DB constant that will be used by the models and the migration files
-database = Ntodo::Database.new
-DB = database.db
+Dir["#{File.dirname(__FILE__)}/tasks/**/*.rake"].sort.each { |ext| load ext }
