@@ -23,7 +23,6 @@
 
 $:.unshift File.dirname(__FILE__)     # For use/testing when no gem is installed
 
-
 # rubygems
 require 'rubygems'
 
@@ -45,4 +44,11 @@ require 'ntodo/ui'
 require 'ntodo/version'
 
 module Ntodo
+  def self.Bootstrap
+	# Connect to the database
+	database = Ntodo::Database.new
+
+	# Make sure our database is up to date.
+	DataMapper.auto_migrate!
+  end
 end

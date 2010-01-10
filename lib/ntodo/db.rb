@@ -22,7 +22,8 @@
 ###
 
 require 'rubygems'
-require 'sequel'
+require 'dm-core'
+require 'dm-validations'
 
 module Ntodo
 
@@ -36,21 +37,34 @@ module Ntodo
 
 		raise ArgumentError unless config.is_a?(Hash)
 
-		adapter = Sequel::Database::ADAPTERS.detect {|db| db.to_s.eql? config[:adapter]}
+		#adapter = Sequel::Database::ADAPTERS.detect {|db| db.to_s.eql? config[:adapter]}
 
 		# TODO: Add proper exception
-		raise ArgumentError if adapter.nil? || adapter.empty?
+		#raise ArgumentError if adapter.nil? || adapter.empty?
 
-		@@db = Sequel.connect(:adapter => adapter, :database => config[:database])
+		# Form the database.
+		db = config[:adapter] << ':'
+		if config[:db_user]
+		  db << config[:db_user]
+		  db << ':'
+		  db << config[:db_passwd]
+		  db << '@'
+		  db << config[:db_hostname]
+		  db << '/'
+		end
+		db << config[:database]
+
+		@@db = DataMapper.setup(:default, db)
 	  end
 	end
 
 	def db
 	  @@db
 	end
+
+	def migrate
+	  DataMapper.auto_migrate!
+	end
+
   end
 end
-
-# Initialize the DB constant that will be used by the models and the migration files
-database = Ntodo::Database.new
-DB = database.db

@@ -71,10 +71,5 @@ end
 # Read command line options
 opts.parse!
 
-# Parse the configuration
-config = Ntodo::Configuration.configuration
-
-# Create an instance of the database
-database = Ntodo::Database.new
-
-print database.to_s
+# Bootstrap
+Ntodo.Bootstrap

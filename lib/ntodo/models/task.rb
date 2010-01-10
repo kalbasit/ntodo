@@ -21,16 +21,23 @@
 #
 ###
 
-module Ntodo
-  class Task < Sequel::Model
-	many_to_one :project
-	one_to_many :logs
+class Task
+  include DataMapper::Resource
 
-	def validate
-	  errors.add(:project_id, "can't be empty") if project_id.empty?
-	  errors.add(:title, "can't be empty") if title.empty?
-	  errors.add(:description, "can't be empty") if description.empty?
-	  errors.add(:written_on, "should be in the past") if written_on > Time.now
-	end
-  end
+  # Relations
+  belongs_to :project
+  has n, :logs
+
+  # Properties
+  property :id,					Serial
+  property :project_id,			Integer, :unique => true, :key => true
+  property :title,				String
+  property :description,		Text
+  property :created_on,			DateTime
+  property :updated_at,			DateTime
+
+  # Validations
+  validates_present :project_id
+  validates_present :title
+  validates_present :description
 end

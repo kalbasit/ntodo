@@ -21,15 +21,20 @@
 #
 ###
 
-module Ntodo
-  class Recap < Sequel::Model
-	many_to_one :project
-	one_to_many :emails
+class Recap
+  include DataMapper::Resource
 
-	def validate
-	  errors.add(:project_id, "can't be empty") if project_id.empty?
-	  errors.add(:email_id, "can't be empty") if email_id.empty?
-	  errors.add(:written_on, "should be in the past") if written_on > Time.now
-	end
-  end
+  # Associations
+  belongs_to :project
+  has n, :emails
+
+  # Properties
+  property :id,					Serial
+  property :project_id,			Integer, :unique => true, :key => true
+  property :email_id,			Integer, :unique => true, :key => true
+  property :created_on,			DateTime
+
+  # Validations
+  validates_present				:project_id
+  validates_present				:email_id
 end

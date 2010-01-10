@@ -3,3 +3,6 @@
 :email                  : wael.nasreddine@gmail.com
 
 :dbadapter              : sqlite
+:db_user				:
+:db_passwd				:
+:db_hostname			:
