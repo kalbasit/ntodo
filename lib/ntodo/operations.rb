@@ -54,15 +54,25 @@ module Ntodo
 	end
 
 	# Add a task
-	# TODO: If description is empty, prompt for it
 	def add_task
+	  if @operation[:task][:description].nil?
+		puts "Please enter the description of the new task"
+		require 'readline'
+		description = ""
+		while line = Readline.readline('> ', true)
+		  description << line
+		end
+	  else
+		description = @operation[:task][:description]
+	  end
+
 	  # Fetch project
 	  project = Project.first(:name => @operation[:project])
 	  raise ArgumentError, "The project #{@operation[:project]} does not exist." if project.nil?
 
 	  task = project.tasks.new
 	  task.title = @operation[:task][:title]
-	  task.description = @operation[:task][:description]
+	  task.description = description
 
 	  unless task.save
 		task.errors.each do |e|
