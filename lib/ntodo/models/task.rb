@@ -39,8 +39,39 @@ class Task
   # Before calling valid, set the created_on
   before :valid?, :set_created_on
 
+  # Before saving the changes to the database log it
+  #before :save, :load_log
+  #after :save, :save_log
+
+  # Prepare the log
+  def load_log(context = :default)
+	log = []
+	self.dirty_attributes.each do |dp, dv|
+	  self.original_attributes.each do |op, ov|
+		if op.model == dp.model && op.name == dp.name
+		  ov = "nil" if ov.nil?
+		  log << "The property #{dp.name} in the model #{dp.model} have changed from #{ov} to #{dv}"
+		end
+	  end
+	end
+  end
+
+  # Save the log
+  def save_log(context = :default)
+	log_entry = Log.new
+	log_entry.project_id = self.project_id
+	log_entry.task_id = self.id
+	log_entry.p1 = @log
+	unless log_entry.save
+	  log_entry.errors.each do |e|
+		puts e
+	  end
+	  raise ArgumentError, "Sql error"
+	end
+  end
+
   # Set the created_on
-  def set_created_on (context = :default)
+  def set_created_on(context = :default)
 	self.created_on = Time.now
   end
 end
