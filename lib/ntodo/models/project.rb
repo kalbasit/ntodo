@@ -30,9 +30,9 @@ class Project
   has n, :recaps
 
   # Properties
-  property :id,					Serial
-  property :name,				String,		:required => true, :unique => true
-  property :created_on,			DateTime,	:required => true
+  property :id,                   Serial
+  property :name,                 String,     :required => true, :unique => true
+  property :created_on,           DateTime,   :required => true
 
   # Before calling valid, set the created_on
   before :valid?, :set_created_on
