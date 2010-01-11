@@ -31,47 +31,56 @@ class Task
   # Properties
   property :id,					Serial
   property :project_id,			Integer,	:required => true, :key => true
+  property :in_project_id,		Integer,	:required => true, :unique => true
   property :title,				String,		:required => true
   property :description,		Text,		:required => true
   property :created_on,			DateTime,	:required => true
   property :updated_at,			DateTime
+  property :visible,			Boolean,	:default => true
 
-  # Before calling valid, set the created_on
+  # Record the date/time this has been created if it's a new record
   before :valid?, :set_created_on
 
-  # Before saving the changes to the database log it
-  #before :save, :load_log
-  #after :save, :save_log
+  # Record the date/time this has been updated if it's an old record
+  before :valid?, :set_updated_on
 
-  # Prepare the log
-  def load_log(context = :default)
-	log = []
-	self.dirty_attributes.each do |dp, dv|
-	  self.original_attributes.each do |op, ov|
-		if op.model == dp.model && op.name == dp.name
-		  ov = "nil" if ov.nil?
-		  log << "The property #{dp.name} in the model #{dp.model} have changed from #{ov} to #{dv}"
-		end
-	  end
-	end
-  end
+  # Increment the in_project_id if it's a new record
+  before :valid?, :increment_in_project_id
 
-  # Save the log
-  def save_log(context = :default)
-	log_entry = Log.new
-	log_entry.project_id = self.project_id
-	log_entry.task_id = self.id
-	log_entry.p1 = @log
-	unless log_entry.save
-	  log_entry.errors.each do |e|
-		puts e
-	  end
-	  raise ArgumentError, "Sql error"
+  # Increment the in_project id
+  #
+  # * This function will increment the in_project id which means we can
+  # * have an in-project count without any extra effort outside the model
+  def increment_in_project_id(context = :default)
+	return unless attributes[:id].nil?
+
+	tasks = Task.first(:order => [ :in_project_id.desc ])
+	if tasks.nil? || tasks.in_project_id.nil?
+	  self.in_project_id = 1
+	else
+	  self.in_project_id = tasks.in_project_id.to_i + 1
 	end
   end
 
   # Set the created_on
   def set_created_on(context = :default)
+	return unless attributes[:id].nil?
+
 	self.created_on = Time.now
+  end
+
+  # Set the updated_on
+  def set_updated_on(context = :default)
+	return if attributes[:id].nil?
+
+	self.updated_on = Time.now
+  end
+
+  # Get the visible tasks
+  def self.visible(filter = {})
+	filters = { :visible => true }
+	filters.merge filter
+
+	tasks = Task.all(filters)
   end
 end
