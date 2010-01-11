@@ -25,15 +25,15 @@ class Task
   include DataMapper::Resource
 
   # Relations
-  belongs_to :project
-  has n, :logs
+  belongs_to	:project
+  has n,		:logs
 
   # Properties
   property :id,					Serial
-  property :project_id,			Integer, :required => true, :unique => true, :key => true
-  property :title,				String, :required => true
-  property :description,		Text, :required => true
-  property :created_on,			DateTime, :required => true
+  property :project_id,			Integer,	:required => true, :key => true
+  property :title,				String,		:required => true
+  property :description,		Text,		:required => true
+  property :created_on,			DateTime,	:required => true
   property :updated_at,			DateTime
 
   # Before calling valid, set the created_on

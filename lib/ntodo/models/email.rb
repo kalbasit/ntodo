@@ -29,9 +29,9 @@ class Email
 
   # Properties
   property :id,					Serial
-  property :name,				String, :required => true, :unique => true
-  property :email,				String, :required => true, :unique => true, :format => :email_address
-  property :created_on,			DateTime, :required => true
+  property :name,				String,		:required => true, :unique => true
+  property :email,				String,		:required => true, :unique => true, :format => :email_address
+  property :created_on,			DateTime,	:required => true
 
   # Before calling valid, set the created_on
   before :valid?, :set_created_on

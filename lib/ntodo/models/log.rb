@@ -30,13 +30,13 @@ class Log
 
   # Properties
   property :id,					Serial
-  property :project_id,			Integer, :required => true, :unique => true, :key => true
-  property :task_id,			Integer, :required => true, :unique => true, :key => true
+  property :project_id,			Integer,	  :required => true, :key => true
+  property :task_id,			Integer,	  :required => true, :key => true
   property :p1,					Text
   property :p2,					Text
   property :p3,					Text
   property :p4,					Text
-  property :created_on,			DateTime, :required => true
+  property :created_on,			DateTime,	  :required => true
 
   # Before calling valid, set the created_on
   before :valid?, :set_created_on

@@ -25,14 +25,14 @@ class Recap
   include DataMapper::Resource
 
   # Associations
-  belongs_to :project
-  has n, :emails
+  belongs_to  :project
+  has n,	  :emails
 
   # Properties
   property :id,					Serial
-  property :project_id,			Integer, :required => true, :unique => true, :key => true
-  property :email_id,			Integer, :required => true, :unique => true, :key => true
-  property :created_on,			DateTime, :required => true
+  property :project_id,			Integer,	:required => true, :key => true
+  property :email_id,			Integer,	:required => true, :key => true
+  property :created_on,			DateTime,	:required => true
 
   # Before calling valid, set the created_on
   before :valid?, :set_created_on
