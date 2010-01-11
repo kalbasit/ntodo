@@ -51,7 +51,21 @@ module Ntodo
 	end
 
 	def add_task
+	  # Fetch project
+	  project = Project.first(:name => @operation[:project])
+	  raise ArgumentError, "The project #{@operation[:project]} does not exist." if project.nil?
 
+	  task = Task.new
+	  task.project_id = project.id
+	  task.title = @operation[:task][:title]
+	  task.description = @operation[:task][:description]
+
+	  unless task.save
+		task.errors.each do |e|
+		  puts e
+		end
+		raise ArgumentError, "Sql errors, can't proceed"
+	  end
 	end
 
 	def add_project
@@ -66,6 +80,7 @@ module Ntodo
 	end
 
 	def delete
+
 	end
 
 	def list
