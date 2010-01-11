@@ -83,7 +83,7 @@ opts = OptionParser.new do |opts|
 	  if options[:operation][:type]
 		raise ArgumentError
 	  else
-		options[:operation][:type] = :delete
+		options[:operation][:type] = :list
 	  end
 	rescue
 	  puts "Sorry, but you cannot request more than one operation at a time."
