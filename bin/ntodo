@@ -3,7 +3,7 @@
 ###
 #
 # This file is part of nTodo
-# 
+#
 # Copyright (c) 2009 Wael Nasreddine <wael.nasreddine@gmail.com>
 #
 # This program is free software; you can redistribute it and/or modify
@@ -37,14 +37,6 @@ help = <<HELP
 ntodo is a powerfull ncurses-based todo, you can add tasks, start working on them, pause it, stop it and send
 the recap mail to the defined users in the configuration files
 
-Basic command line Usage:
-  ntodo
-  ntodo --add bug 'todo rocks, get it'
-  ntodo --start BUG_100
-  ntodo --pause BUG_100
-  ntodo --stop BUG_100
-  ntodo --send-recap
-
   Configuration is read from ~/.config/ntodo/config.yml
 
 HELP
@@ -54,22 +46,128 @@ options = {}
 opts = OptionParser.new do |opts|
   opts.banner = help
 
-  opts.on("--add <type> <message>", "Add a new task/bug with the message") do |type, msg|
+  opts.separator ""
+  opts.separator "Main options:"
+
+  opts.on("-a", "--add", "Add a new project/task (require -p or -t)") do
 	begin
-	  raise ArgumentError if type.nil? || msg.nil?
+	  options[:operation] = {} if options[:operation].nil?
+	  if options[:operation][:type]
+		raise ArgumentError
+	  else
+		options[:operation][:type] = :add
+	  end
 	rescue
-	  puts "You should specify the type and the message"
+	  puts "Sorry, but you cannot request more than one operation at a time."
 	  exit 1
 	end
   end
 
+  opts.on("-d", "--delete", "Delete a project/task (require -p or -t)") do
+	begin
+	  options[:operation] = {} if options[:operation].nil?
+	  if options[:operation][:type]
+		raise ArgumentError
+	  else
+		options[:operation][:type] = :delete
+	  end
+	rescue
+	  puts "Sorry, but you cannot request more than one operation at a time."
+	  exit 1
+	end
+  end
+
+  opts.on("-l", "--list", "List project/task (if -p given tasks will be listed, projects otherwize)") do
+	begin
+	  options[:operation] = {} if options[:operation].nil?
+	  if options[:operation][:type]
+		raise ArgumentError
+	  else
+		options[:operation][:type] = :delete
+	  end
+	rescue
+	  puts "Sorry, but you cannot request more than one operation at a time."
+	  exit 1
+	end
+  end
+
+  opts.separator ""
+  opts.separator "Secondary options:"
+
+  opts.on("-p", "--project Project", "Operate on a project") do |name|
+	options[:operation] = {} if options[:operation].nil?
+	options[:operation][:project] = name
+  end
+
+  opts.on("-t", "--task Title", "Operate on a task") do |name|
+	options[:operation] = {} if options[:operation].nil?
+	options[:operation][:task] = {} if options[:operation][:task].nil?
+
+	options[:operation][:task][:title] = name
+  end
+
+  opts.on("-D", "--description Desctiption", "Add the description of the task from the command-line") do |description|
+	begin
+	  raise ArgumentError if options[:operation].nil? || options[:operation][:type].nil? || options[:operation][:task].nil?
+
+	  options[:operation][:task][:description] = description
+	rescue
+	  puts "Before invoking -D, you should pass -a and -t options"
+	  exit 1
+	end
+  end
+
+  opts.separator ""
+  opts.separator "Common options:"
+
+  opts.on_tail("-h", "--help", "Show this message") do
+	puts opts
+	exit
+  end
+
+  opts.on("--debug", "Display debugging message") do
+	options[:debug] = true
+  end
+
   opts.on("--version", "Display current version") do
 	puts "nTodo " + Ntodo.version
+	exit
+  end
+
+end
+
+module Ntodo
+  class Main
+
+	def initialize(options, opts)
+	  @options = options
+	  @opts = opts
+	end
+
+	def execute
+	  # Read command line options
+	  @opts.parse!
+
+	  # Begin bootstrap
+	  begin
+		app = Ntodo::Bootstrap.new(@options)
+	  rescue => err
+		puts "#{err.message} (#{err.class})"
+		err.backtrace.each { |frame| puts frame }
+	  end
+
+	  # Run
+	  begin
+		app.execute
+	  rescue => err
+		puts "#{err.message} (#{err.class})"
+		err.backtrace.each { |frame| puts frame }
+	  end
+	end
   end
 end
 
-# Read command line options
-opts.parse!
-
-# Bootstrap
-Ntodo.Bootstrap
+if $0 == __FILE__
+  main = Ntodo::Main.new(options, opts)
+  main.execute
+end

@@ -30,6 +30,7 @@ require 'rubygems'
 require 'fileutils'
 require 'time'
 require 'yaml'
+require 'pp'
 
 # stdlib
 
@@ -44,11 +45,28 @@ require 'ntodo/ui'
 require 'ntodo/version'
 
 module Ntodo
-  def self.Bootstrap
-	# Connect to the database
-	database = Ntodo::Database.new
+  class Bootstrap
+	def initialize(options)
+	  options = {} if options.nil?
 
-	# Make sure our database is up to date.
-	DataMapper.auto_migrate!
+	  options[:ui] = :ncurses if options.nil? || options.empty? || options[:ui].nil?
+
+	  @@options = options
+
+	  # Connect to the database
+	  database = Ntodo::Database.new
+
+	  # Make sure our database is up to date.
+	  DataMapper.auto_migrate!
+	end
+
+	def execute
+	  raise ArgumentError, "No operations were specified." if @@options[:ui] == :cli && (@@options[:operation].nil? || @@options[:operation].empty?)
+
+	end
+
+	def self.options
+	  @@options
+	end
   end
 end

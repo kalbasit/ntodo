@@ -36,7 +36,7 @@ module Ntodo
 		begin
 		  @@config = YAML.load_file(CONFIG_FILE)
 		  raise "Invalid configuration - #{CONFIG_FILE}" unless @@config.is_a?(Hash)
-		  STDOUT.puts "Configuration loaded from #{CONFIG_FILE}"
+		  STDOUT.puts "Configuration loaded from #{CONFIG_FILE}" if Ntodo::Bootstrap.options[:debug]
 		rescue => err
 		  STDERR.puts "Configuration cannot be read from the config file, perhaps I couldn't parse it."
 		  STDERR.puts "\t" + err.to_s
