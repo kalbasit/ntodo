@@ -62,7 +62,7 @@ module Ntodo
 	  database = Ntodo::Database.new
 
 	  # Make sure our database is up to date.
-	  DataMapper.auto_migrate!
+	  #DataMapper.auto_migrate!
 	end
 
 	def execute
