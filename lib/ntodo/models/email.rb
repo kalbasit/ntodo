@@ -29,12 +29,15 @@ class Email
 
   # Properties
   property :id,					Serial
-  property :name,				String, :unique => true
-  property :email,				String, :unique => true
-  property :created_on,			DateTime
+  property :name,				String, :required => true, :unique => true
+  property :email,				String, :required => true, :unique => true, :format => :email_address
+  property :created_on,			DateTime, :required => true
 
-  # Validations
-  validates_present				:name
-  validates_present				:email
-  validates_format				:email, :as => :email_address
+  # Before calling valid, set the created_on
+  before :valid?, :set_created_on
+
+  # Set the created_on
+  def set_created_on (context = :default)
+	self.created_on = Time.now
+  end
 end

@@ -30,11 +30,15 @@ class Recap
 
   # Properties
   property :id,					Serial
-  property :project_id,			Integer, :unique => true, :key => true
-  property :email_id,			Integer, :unique => true, :key => true
-  property :created_on,			DateTime
+  property :project_id,			Integer, :required => true, :unique => true, :key => true
+  property :email_id,			Integer, :required => true, :unique => true, :key => true
+  property :created_on,			DateTime, :required => true
 
-  # Validations
-  validates_present				:project_id
-  validates_present				:email_id
+  # Before calling valid, set the created_on
+  before :valid?, :set_created_on
+
+  # Set the created_on
+  def set_created_on (context = :default)
+	self.created_on = Time.now
+  end
 end

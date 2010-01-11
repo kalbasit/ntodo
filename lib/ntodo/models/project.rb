@@ -31,9 +31,14 @@ class Project
 
   # Properties
   property :id,					Serial
-  property :name,				String, :unique => true
-  property :created_on,			DateTime
+  property :name,				String, :required => true, :unique => true
+  property :created_on,			DateTime, :required => true
 
-  # Validations
-  validates_present				:name
+  # Before calling valid, set the created_on
+  before :valid?, :set_created_on
+
+  # Set the created_on
+  def set_created_on (context = :default)
+	self.created_on = Time.now
+  end
 end
