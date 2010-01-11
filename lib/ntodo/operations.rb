@@ -27,6 +27,8 @@ module Ntodo
 	  @operation = operations
 	end
 
+	# Run the operation
+	# * The operation could be an add/delete or list
 	def run
 	  case @operation[:type]
 	  when :add
@@ -40,6 +42,7 @@ module Ntodo
 	  end
 	end
 
+	# Add a project or a task
 	def add
 	  if not (@operation[:task].nil? || @operation[:project].nil?)
 		add_task
@@ -50,6 +53,8 @@ module Ntodo
 	  end
 	end
 
+	# Add a task
+	# TODO: If description is empty, prompt for it
 	def add_task
 	  # Fetch project
 	  project = Project.first(:name => @operation[:project])
@@ -67,6 +72,7 @@ module Ntodo
 	  end
 	end
 
+	# Add a project
 	def add_project
 	  project = Project.new
 	  project.attributes = { :name => @operation[:project] }
@@ -79,11 +85,39 @@ module Ntodo
 	end
 
 	def delete
-
 	end
 
 	def list
+	  if @operation[:project].nil?
+		list_projects
+	  else
+		list_tasks
+	  end
 	end
 
+	def list_projects
+	  puts "Here's the project list"
+	  Project.all.each do |project|
+		puts "\t" +  project.name
+	  end
+	end
+
+	def list_tasks
+	  begin
+		tasks = Project.all(:name => @operation[:project]).tasks
+		raise ArgumentError if tasks.empty?
+
+		puts "Here's the task list of the project #{@operation[:project]}"
+		puts
+
+		tasks.each do |task|
+		  task_desc = '#' + task.in_project_id.to_s + "\t" + task.title + "\t" + task.description
+		  puts task_desc
+		end
+	  rescue
+		puts "The project does not exist or it doesn't have any tasks"
+		exit 1
+	  end
+	end
   end
 end
