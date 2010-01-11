@@ -38,6 +38,7 @@ require 'pp'
 require 'ntodo/config'
 require 'ntodo/db'
 require 'ntodo/models'
+require 'ntodo/operations'
 require 'ntodo/path'
 require 'ntodo/recap'
 require 'ntodo/task'
@@ -49,7 +50,11 @@ module Ntodo
 	def initialize(options)
 	  options = {} if options.nil?
 
-	  options[:ui] = :ncurses if options.nil? || options.empty? || options[:ui].nil?
+	  if options.nil? || options.empty?
+		options[:ui] = :ncurses if options[:ui].nil?
+	  else
+		options[:ui] = :cli if options[:ui].nil?
+	  end
 
 	  @@options = options
 
@@ -63,6 +68,12 @@ module Ntodo
 	def execute
 	  raise ArgumentError, "No operations were specified." if @@options[:ui] == :cli && (@@options[:operation].nil? || @@options[:operation].empty?)
 
+	  if @@options[:ui] == :cli
+		operation = Ntodo::Operations.new @@options[:operation]
+		operation.run
+	  else
+		# Run the ncurses interface
+	  end
 	end
 
 	def self.options
