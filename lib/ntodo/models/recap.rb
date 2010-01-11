@@ -29,10 +29,10 @@ class Recap
   has n,	  :emails
 
   # Properties
-  property :id,                 Serial
-  property :project_id,         Integer,    :required => true, :key => true
-  property :email_id,           Integer,    :required => true, :key => true
-  property :created_on,         DateTime,   :required => true
+  property :id,					Serial
+  property :project_id,			Integer,	:required => true, :key => true
+  property :email_id,			Integer,	:required => true, :key => true
+  property :created_on,			DateTime,	:required => true
 
   # Before calling valid, set the created_on
   before :valid?, :set_created_on
