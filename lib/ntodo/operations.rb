@@ -55,8 +55,7 @@ module Ntodo
 	  project = Project.first(:name => @operation[:project])
 	  raise ArgumentError, "The project #{@operation[:project]} does not exist." if project.nil?
 
-	  task = Task.new
-	  task.project_id = project.id
+	  task = project.tasks.new
 	  task.title = @operation[:task][:title]
 	  task.description = @operation[:task][:description]
 
